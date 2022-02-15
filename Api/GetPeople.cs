@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace Api
 {
@@ -22,8 +23,10 @@ namespace Api
             //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             //dynamic data = JsonConvert.DeserializeObject(requestBody);
 
+            var binpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var roothpath = Path.GetFullPath(Path.Combine(binpath, ".."));
 
-            var people = JsonConvert.DeserializeObject<BlazorWasmDemo.Person[]>(File.ReadAllText("people-sample.json"));
+            var people = JsonConvert.DeserializeObject<BlazorWasmDemo.Person[]>(File.ReadAllText(Path.Combine(roothpath, "people-sample.json")));
             return new OkObjectResult(people);
         }
     }
