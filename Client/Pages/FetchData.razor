@@ -1,0 +1,45 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+
+<PageTitle>Integration to Azure Function</PageTitle>
+
+<h1>List of sample people</h1>
+
+<p>This component calls an Azure Function to retrieve sample data.</p>
+
+@if (people is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in people)
+            {
+                <tr>
+                    <td>@p.FirstName</td>
+                    <td>@p.LastName</td>
+                    <td>@p.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    //private WeatherForecast[]? forecasts;
+    private BlazorWasmDemo.Person[] people;
+
+    protected override async Task OnInitializedAsync()
+    {
+        people = await Http.GetFromJsonAsync<BlazorWasmDemo.Person[]>("/api/GetPeople");
+    }
+}
